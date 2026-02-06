@@ -1,5 +1,5 @@
 #include "main.h"
-#include "../include/TitanReset/TRChassis.hpp"
+#include "../include/TitanReset/TitanReset.hpp"
 
 /////
 // For installation, upgrading, documentations, and tutorials, check out our website!
@@ -16,7 +16,7 @@ ez::Drive chassis(
     4.125,  // Wheel Diameter (Remember, 4" wheels without screw holes are actually 4.125!)
     343);   // Wheel RPM = cartridge * (motor gear / wheel gear)
 
-    /**
+/**
  * North sensor
  * 6 inches away in the direction it is facing from the center axis of the robot
  * 3 inches away in the perpendicular direction it is facing from the center axis of the robot
@@ -48,6 +48,13 @@ tr_sensor south({4, 1}, 12);
  */
 tr_sensor west({7, 2}, 13);
 
+/**
+ * TitanReset Chassis
+ * {} - Defualt TitanReset settings
+ * &chassis.imu - pointer to IMU
+ * &chassis - pointer to EZ-Template Drive
+ * {&north, &east, &south, &west} - Array of pointers to sensors.
+ */
 tr_chassis dsr_system({}, &chassis.imu, &chassis, {&north, &east, &south, &west});
 
 // Uncomment the trackers you're using here!
