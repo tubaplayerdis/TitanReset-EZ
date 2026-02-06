@@ -1,0 +1,12 @@
+[
+  {
+    "metadata": {
+      "location": "https://github.com/tubaplayerdis/TitanReset-EZ/releases/download/v0.0.1/TitanReset-EZ@0.0.1.zip"
+    },
+    "name": "TitanReset-EZ",
+    "py/object": "pros.conductor.templates.base_template.BaseTemplate",
+    "supported_kernels": "^4.1.1",
+    "target": "v5",
+    "version": "0.0.1"
+  }
+]
