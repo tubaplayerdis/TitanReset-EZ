@@ -50,12 +50,11 @@ tr_sensor west({7, 2}, 13);
 
 /**
  * TitanReset Chassis
- * {} - Defualt TitanReset settings
  * &chassis.imu - pointer to IMU
  * &chassis - pointer to EZ-Template Drive
  * {&north, &east, &south, &west} - Array of pointers to sensors.
  */
-tr_chassis dsr_system({}, &chassis.imu, &chassis, {&north, &east, &south, &west});
+tr_chassis dsr_system(&chassis.imu, &chassis, {&north, &east, &south, &west});
 
 // Uncomment the trackers you're using here!
 // - `8` and `9` are smart ports (making these negative will reverse the sensor)

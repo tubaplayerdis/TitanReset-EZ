@@ -40,6 +40,8 @@ class tr_ez_base : public tr_drivebase_generic
     }
 };
 
+static const tr_options default_options = {};
+
 float tr_chassis::quadrant_recursive(float heading)
 {
     if (heading < 0.0f)
@@ -82,7 +84,7 @@ void tr_chassis::set_active_sensors(int sensors)
     active_sensors |= sensors;
 }
 
-tr_chassis::tr_chassis(tr_options settings, pros::Imu *inertial, ez::Drive* chas ,std::array<tr_sensor *,4> sensors) : options(settings), active_sensors(0), b_display(false), location_task(nullptr)
+tr_chassis::tr_chassis(pros::Imu *inertial, ez::Drive* chas ,std::array<tr_sensor *,4> sensors) : options(default_options), active_sensors(0), b_display(false), location_task(nullptr)
 {
     north = sensors.at(0);
     east = sensors.at(1);
@@ -92,7 +94,7 @@ tr_chassis::tr_chassis(tr_options settings, pros::Imu *inertial, ez::Drive* chas
     chassis = new tr_ez_base(chas);
 }
 
-tr_chassis::tr_chassis(tr_options settings, pros::Imu *inertial, tr_drivebase_generic* chas ,std::array<tr_sensor *,4> sensors) : options(settings), active_sensors(0), b_display(false), location_task(nullptr)
+tr_chassis::tr_chassis(pros::Imu *inertial, tr_drivebase_generic* chas ,std::array<tr_sensor *,4> sensors) : options(default_options), active_sensors(0), b_display(false), location_task(nullptr)
 {
     north = sensors.at(0);
     east = sensors.at(1);
@@ -385,23 +387,19 @@ float tr_chassis::conf_avg(tr_distance one, tr_distance two)
     return (one.get_confidence() + two.get_confidence()) / 2.0f;
 }
 
-bool tr_chassis::perform_dsr(bool trust_sensors)
+void tr_chassis::perform_dsr()
 {
-    return perform_dsr_quad(get_quadrant(), trust_sensors);
+    return perform_dsr_quad(get_quadrant());
 }
 
-bool tr_chassis::perform_dsr_quad(tr_quadrant quadrant, bool trust_sensors)
+void tr_chassis::perform_dsr_quad(tr_quadrant quadrant)
 {
     tr_vector3 pose = chassis->getPose();
     tr_conf_pair<tr_vector3> coords = get_position_calculation(quadrant);
 
-    if (coords.get_confidence() > options.sensor_trust && trust_sensors == false) return false;
-
     pose.x = coords.get_value().x;
     pose.y = coords.get_value().y;
     chassis->setPose(pose);
-
-    return true;
 }
 
 void tr_chassis::perform_dsr_init(tr_quadrant quadrant, float heading)
@@ -441,7 +439,8 @@ void tr_chassis::update_display(tr_chassis* chassis)
     float dis_w = chassis->west->distance(heading).get_value();
     
 
-    bool use_pose = chassis->perform_dsr();
+    bool use_pose = true;
+    chassis->perform_dsr();
     tr_conf_pair<tr_vector3> position = chassis->get_position_calculation(tr_quadrant::NEG_POS);
     std::string quads = chassis->get_quadrant_string(chassis->get_quadrant());
     std::string squad = chassis->get_quadrant_string(chassis->sensor_relevancy());
